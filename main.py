@@ -131,8 +131,8 @@ def find_client(connect, first_name=None, last_name=None, email=None, phone=None
             return cur.fetchone()
         if phone is not None:
             cur.execute("""
-            SELECT * FROM phones AS p
-            LEFT JOIN clients AS c ON p.client_id = c.id
+            SELECT * FROM phones p
+            LEFT JOIN clients c ON p.client_id = c.id
             WHERE p.phone = %s;
             """, (phone, ))
             # return check_client_phone(cur.fetchone())
