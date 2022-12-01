@@ -97,18 +97,18 @@ def delete_client(connect, client_id):
         connect.commit()
 
 
-def check_client(cursor):
-    try:
-        return f'Имя: {cursor[1]}\nФамилия: {cursor[2]}'
-    except TypeError:
-        return 'Нет клиента'
-
-
-def check_client_phone(cursor):
-    try:
-        return f'Имя: {cursor[4]}\nФамилия: {cursor[5]}'
-    except TypeError:
-        return 'Нет клиента, либо у него не указан телефон'
+# def check_client(cursor):
+#     try:
+#         return f'Имя: {cursor[1]}\nФамилия: {cursor[2]}'
+#     except TypeError:
+#         return 'Нет клиента'
+#
+#
+# def check_client_phone(cursor):
+#     try:
+#         return f'Имя: {cursor[4]}\nФамилия: {cursor[5]}'
+#     except TypeError:
+#         return 'Нет клиента, либо у него не указан телефон'
 
 
 def find_client(connect, first_name=None, last_name=None, email=None, phone=None):
@@ -117,24 +117,26 @@ def find_client(connect, first_name=None, last_name=None, email=None, phone=None
             cur.execute("""
             SELECT * FROM clients WHERE first_name=%s;
             """, (first_name, ))
-            return check_client(cur.fetchone())
+            return cur.fetchall()
         if last_name is not None:
             cur.execute("""
             SELECT * FROM clients WHERE last_name=%s;
             """, (last_name, ))
-            return check_client(cur.fetchone())
+            return cur.fetchall()
         if email is not None:
             cur.execute("""
             SELECT * FROM clients WHERE email=%s;
             """, (email, ))
-            return check_client(cur.fetchone())
+            # return check_client(cur.fetchone())
+            return cur.fetchone()
         if phone is not None:
             cur.execute("""
             SELECT * FROM phones AS p
             LEFT JOIN clients AS c ON p.client_id = c.id
             WHERE p.phone = %s;
             """, (phone, ))
-            return check_client_phone(cur.fetchone())
+            # return check_client_phone(cur.fetchone())
+            return cur.fetchone()
 
 
 with psycopg2.connect(database="clients_db", user="postgres", password="123") as conn:
